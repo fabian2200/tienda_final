@@ -89,46 +89,53 @@
                 @csrf
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-lg-3">
-                            <h2 style="background-color: rgba(255, 208, 0, 0.541); padding: 5px; width: 100%;">Producto: <br><strong id="etiqueta_nombre"></strong></h2>
+                        <div class="col-lg-6">
+                            <table id="tabla_productos_vender" style="width: 100%; font-size: 16px !important">
+                                <thead>
+                                    <tr style="background-color: aqua;">
+                                        <th>Categoria</th>
+                                        <th>Nombre</th>
+                                        <th>Precio</th>
+                                        <th>Disponible</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="lista_productos" >
+        
+                                </tbody>
+                            </table>
                         </div>
-                        <div class="col-lg-3">
-                            <h2 style="background-color: rgba(0, 255, 255, 0.377); padding: 5px; width: 100%;">Precio venta: <strong id="etiqueta_precio"></strong></h2>
-                        </div>
-                        <div class="col-lg-3">
-                            <button onclick="agregarProductoVentaManual()" style="width: 100% !important" type="button" class="btn_modal btn btn-success">Agregar Producto</button>
-                        </div>
-                        <div class="col-lg-3">
-                            <button style="width: 100% !important" type="button" data-dismiss="modal" class="btn_modal btn btn-danger">Cerrar</button>
+                        <div class="col-lg-6" style="background-color: #e0f1ff; padding: 16px;">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <h4 style="background-color: rgba(255, 208, 0, 0.541); padding: 5px; width: 100%;">Producto: <br><strong id="etiqueta_nombre"></strong></h4>
+                                </div>
+                                <div class="col-lg-6">
+                                    <h4 style="background-color: rgba(0, 255, 255, 0.377); padding: 5px; width: 100%;">Precio venta: <strong id="etiqueta_precio"></strong></h4>
+                                </div>
+                            </div>
+                            <input id="codigo_barras" autocomplete="off" required name="codigo" type="hidden"class="form-control">
+                            <br>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <label style="font-size: 25px; font-weight: bold" for="cantidad_manual">Gramos o Unidades</label>
+                                    <input autocomplete="off" style="color: black !important; font-size: 25px; font-weight: bold; background-color: #ffd8b6" required oninput="calcularPrecio(this)" id="cantidad_manual" name="cantidad" type="text" class="form-control" placeholder="Gramos o unidades">
+                                </div>
+                                <div class="col-lg-6">
+                                    <label style="font-size: 25px; font-weight: bold" for="precio">Precio a vender</label>
+                                    <input autocomplete="off" style="font-size: 25px; font-weight: bold" required oninput="calcularKilos(this)" id="precio" name="precio" type="text" class="form-control" placeholder="precio de venta">
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <button onclick="agregarProductoVentaManual()" style="width: 100% !important" type="button" class="btn_modal btn btn-success">Agregar Producto</button>
+                                </div>
+                                <div class="col-lg-6">
+                                    <button style="width: 100% !important" type="button" data-dismiss="modal" class="btn_modal btn btn-danger">Cerrar</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <input id="codigo_barras" autocomplete="off" required name="codigo" type="hidden"class="form-control">
-                    <br>
-                    <div class="row">
-                        
-                        <div class="col-lg-6">
-                            <label style="font-size: 25px; font-weight: bold" for="cantidad_manual">Gramos o Unidades</label>
-                            <input autocomplete="off" style="color: black !important; font-size: 25px; font-weight: bold; background-color: #ffd8b6" required oninput="calcularPrecio(this)" id="cantidad_manual" name="cantidad" type="text" class="form-control" placeholder="Gramos o unidades">
-                        </div>
-                        <div class="col-lg-6">
-                            <label style="font-size: 25px; font-weight: bold" for="precio">Precio a vender</label>
-                            <input autocomplete="off" style="font-size: 25px; font-weight: bold" required oninput="calcularKilos(this)" id="precio" name="precio" type="text" class="form-control" placeholder="precio de venta">
-                        </div>
-                    </div>
-                    <hr>
-                    <table id="tabla_productos_vender" style="width: 100%; font-size: 16px !important">
-                        <thead>
-                            <tr style="background-color: aqua;">
-                                <th>Imagen</th>
-                                <th>Nombre</th>
-                                <th>Precio</th>
-                                <th>Disponible</th>
-                            </tr>
-                        </thead>
-                        <tbody id="lista_productos" >
-
-                        </tbody>
-                    </table>
                 </div>
             </form>
           </div>
@@ -309,7 +316,7 @@
                     response.forEach(element => {
                         div += '<tr style="cursor:pointer" onclick="seleccionarProducto(\'' + element.codigo_barras + '\', '+element.precio_venta+', \'' + element.descripcion + '\')" class="producto-row" id="row_'+id+'" style="margin-bottom: 20px">'+
                                     '<td>'+
-                                        '<img src="/imagenes_productos/'+element.imagen+'" style="width: 50px" alt="">'+
+                                        '<p style="font-size: 16px">'+element.categoria+'</p>'+
                                     '</td>'+
                                     '<td>'+
                                         '<p style="font-size: 16px">'+element.descripcion+'</p>'+
