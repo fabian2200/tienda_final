@@ -357,7 +357,9 @@ class ProductosController extends Controller
     }
 
     public function productosCategoria(Request $request){
-        $productos = DB::connection('mysql')->table('productos')
+        $productos = DB::connection('mysql')
+        ->table('productos')
+        ->select('id', 'codigo_barras', 'precio_venta', 'descripcion', 'categoria', 'existencia', 'unidad_medida')
         ->get();
         return response()->json($productos);
     }

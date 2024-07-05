@@ -94,6 +94,8 @@
         </div>
       </div>
 
+      <br><br><br>
+
     <script>
          $(document).ready(function () {
             var table = $('#tabla_codigos').DataTable({

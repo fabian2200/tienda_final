@@ -304,12 +304,11 @@
     </div>
 
     <script>
-        function elegirCategoria(){
+        function cargarProductosPrimeraVez(){
             $.ajax({
                 url: '/productos-categoria',
                 type: 'GET',
                 success: function(response) {
-                    $('#exampleModal2').modal("show");
                     var div_lista = document.getElementById("lista_productos");
                     var div = "";
                     id = 123;
@@ -336,7 +335,6 @@
 
                    // Destruir la instancia DataTable y limpiar selecciones al cerrar el modal
                     $('#exampleModal2').on('hidden.bs.modal', function () {
-                        $('#tabla_productos_vender').DataTable().destroy();
                         $('#tabla_productos_vender tbody tr').removeClass('selected');
                     });
 
@@ -380,6 +378,12 @@
             });
         }
 
+        cargarProductosPrimeraVez();
+
+        function elegirCategoria(){
+            $('#exampleModal2').modal("show");
+        }
+
         var precio_seleccionado = 0;
         function seleccionarProducto(item, precio, nombre_producto){
             document.getElementById("codigo_barras").value = item;
@@ -404,7 +408,7 @@
         function calcularKilos(element){
             var numero = (element.value / precio_seleccionado);
             let numeroRedondeado = numero % 1 !== 0 ? parseFloat(numero.toFixed(3)) : numero;
-            document.getElementById("cantidad_manual").value = numeroRedondeado;
+            document.getElementById("cantidad_manual").value = (numeroRedondeado * 1000);
         }
 
         function calcularPrecio(element){
