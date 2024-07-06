@@ -127,8 +127,8 @@ class BarcodeController extends Controller
         $barcodeData = $request->input("codigo");
         $productName = $request->input("nombre");
 
-        $ipAddress = "192.168.1.100"; 
-        $port = 9100;
+        $ipAddress = "192.168.1.224"; 
+        $port = env("PUERTO_IMPRESORA");
         $connector = new NetworkPrintConnector($ipAddress, $port);
         $printer = new Printer($connector);
         $printer->initialize();
