@@ -92,7 +92,8 @@ Route::middleware("auth")
         Route::post("/guardar-codigo", "BarcodeController@generateBarcode")->name("codigos.generateBarcode");
         Route::get("/eliminar-codigo", "BarcodeController@eliminarCodigo")->name("codigos.eliminarCodigo");
         Route::post("/editar-codigo", "BarcodeController@editarCodigo")->name("codigos.editarCodigo");
-        
+        Route::get("/imprimir-codigo", "BarcodeController@imprimirCodigoBarra")->name("imprimirCodigoBarra");
+
         Route::get("/contabilidad", "ContabilidadController@index")->name("contabilidad.index");
         Route::get("/imprimir-contabilidad", "ContabilidadController@imprimirContabilidad")->name("contabilidad.imprimir");
     

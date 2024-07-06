@@ -31,7 +31,7 @@
                             <td>{{$codigo->fecha}}</td>
                             <td>{{$codigo->hora}}</td>
                             <td style="text-align: center">
-                                <button onclick="printDiv({{ $loop->index }})" type="submit" class="btn btn-primary">
+                                <button onclick="printDiv('{{ $codigo->numero }}', '{{ $codigo->descripcion }}')" type="submit" class="btn btn-primary">
                                     <i class="fa fa-print"></i>
                                 </button>
                                 <button  onclick="setearValores({{$codigo->id}}, '{{$codigo->descripcion}}', '{{$codigo->numero}}')" data-toggle="modal" data-target="#exampleModalCenterCodigo" class="btn btn-warning">
@@ -92,9 +92,30 @@
             </div>
           </div>
         </div>
-      </div>
+    </div>
 
-      <br><br><br>
+    <div class="modal fade" id="modalImprimir" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel"></h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+                <label for=""><h3>Ingrese la cantidad de copias que desea imprimir</h3></label>
+                <input id="numero_copias" style="font-size: 25px" type="number" class="form-control" placeholder="2">
+            </div>
+            <div class="modal-footer">
+                <button onclick="confirmarImpresion()" style="font-size: 25px" type="button" class="btn btn-primary">Imprimir</button>
+                <button style="font-size: 25px" type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+            </div>
+          </div>
+        </div>
+    </div>
+
+    <br><br><br>
 
     <script>
          $(document).ready(function () {
@@ -270,41 +291,52 @@
             });
         }
 
-        function printDiv(id) {
-            var divContent = document.getElementById('print_'+id).innerHTML;
-            var div = "<div style='margin-top: 24px; width: 100%; display: flex; justify-content: space-between;'>"
-            for (let index = 0; index < 3; index++) {
-                div += ("<div style='text-align: center'>"+divContent+"</div>");
-            }
-            div += "</div>"
-
-            var printWindow = window.open('', '', 'height=600,width=800');
-            printWindow.document.write('<html><head><title>Impresión de Div</title>');
-            printWindow.document.write('</head><body>');
-            printWindow.document.write(div);
-            printWindow.document.write(div);
-            printWindow.document.write(div);
-            printWindow.document.write(div);
-            printWindow.document.write(div);
-            printWindow.document.write(div);
-            printWindow.document.write(div);
-            printWindow.document.write(div);
-            printWindow.document.write(div);
-            printWindow.document.write(div);
-            printWindow.document.write(div);
-            printWindow.document.write(div);
-            printWindow.document.write('</body></html>');
-            printWindow.document.close();
-            printWindow.onload = function() {
-                printWindow.print();
-                printWindow.close();
-            };
+        var codigo_imprimir = 0;
+        var nombre_imprimir = '';
+        function printDiv(id, nombre) {
+            codigo_imprimir = id;
+            nombre_imprimir = nombre;
+            $('#modalImprimir').modal('show');
         }
 
-        function verCodigos(imagen, codigo, desc){
-            document.getElementById("imagen_modal").setAttribute("src", imagen);
-            document.getElementById("codigo_modal").innerText = codigo;
-            document.getElementById("descripcion_modal").innerText = desc;
+        function confirmarImpresion(){
+            var data = {
+                numero: document.getElementById("numero_copias").value,
+                codigo: codigo_imprimir,
+                nombre: nombre_imprimir
+            }
+
+            $.ajax({
+                url: '/imprimir-codigo',
+                type: 'GET',
+                data: data, 
+                success: function(response) {
+                    $('#modalImprimir').modal('hide');
+                    codigo_imprimir = 0;
+                    nombre_imprimir = '';
+                    document.getElementById("numero_copias").value = '';
+                    Swal.fire({
+                        position: "center",
+                        icon: 'info',
+                        title: response.message,
+                        showConfirmButton: false,
+                        timer: 1500
+                    });                        
+                },
+                error: function(xhr, status, error) {
+                    $('#modalImprimir').modal('hide');
+                    codigo_imprimir = 0;
+                    nombre_imprimir = '';
+                    document.getElementById("numero_copias").value = '';
+                    Swal.fire({
+                        position: "center",
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Ocurrió un error al intentar imprimir el código: ' + xhr.responseJSON.message,
+                        showConfirmButton: true
+                    });
+                }
+            });
         }
     </script>
 @endsection

@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 use DNS1D;
 use DB;
 
+use Mike42\Escpos\PrintConnectors\NetworkPrintConnector;
+use Mike42\Escpos\Printer;
+
 class BarcodeController extends Controller
 {
 
@@ -117,5 +120,49 @@ class BarcodeController extends Controller
         }
     
         return response()->json($response);
+    }
+
+    public function imprimirCodigoBarra(Request $request){
+        $numCopies = $request->input("numero");
+        $barcodeData = $request->input("codigo");
+        $productName = $request->input("nombre");
+
+        $ipAddress = "192.168.1.100"; 
+        $port = 9100;
+        $connector = new NetworkPrintConnector($ipAddress, $port);
+        $printer = new Printer($connector);
+        $printer->initialize();
+
+        $barcodeHeight = 60; 
+        $barcodeWidth = 2;
+
+        for ($i = 0; $i < $numCopies; $i++) {
+            $labelWidth = 320; 
+            $labelHeight = 250;
+        
+            $marginLeft = ($labelWidth - ($barcodeWidth * strlen($barcodeData))) / 2;
+            $marginTop = ($labelHeight - $barcodeHeight) / 2;
+        
+            $printer->feed($marginTop); 
+            $printer->setJustification(Printer::JUSTIFY_CENTER);
+        
+            $printer->text($productName."\n");
+            $printer->setBarcodeHeight($barcodeHeight);
+            $printer->setBarcodeWidth($barcodeWidth);
+            $printer->barcode($barcodeData, Printer::BARCODE_CODE128);
+            $printer->text("\n".$barcodeData."\n");
+        
+            $printer->feed();
+        }
+        
+        $printer->cut();
+        $printer->close();
+
+        $response = [
+            'status' => 'error',
+            'message' => 'Se imprimió el código de barras correctamente'
+        ];
+
+        return $response;
     }
 }
