@@ -123,46 +123,32 @@ class BarcodeController extends Controller
     }
 
     public function imprimirCodigoBarra(Request $request){
-        $numCopies = $request->input("numero");
-        $barcodeData = $request->input("codigo");
-        $productName = $request->input("nombre");
+        try {
+            $numCopies = $request->input("numero");
+            $barcodeData = $request->input("codigo");
+            $productName = $request->input("nombre");
 
-        $ipAddress = "192.168.1.224"; 
-        $port = env("PUERTO_IMPRESORA");
-        $connector = new NetworkPrintConnector($ipAddress, $port);
-        $printer = new Printer($connector);
-        $printer->initialize();
+            $printerName = "XP-365";
 
-        $barcodeHeight = 60; 
-        $barcodeWidth = 2;
+            $connector = new WindowsPrinterConnection($printerName);
+            $printer = new Printer($connector);
 
-        for ($i = 0; $i < $numCopies; $i++) {
-            $labelWidth = 320; 
-            $labelHeight = 250;
-        
-            $marginLeft = ($labelWidth - ($barcodeWidth * strlen($barcodeData))) / 2;
-            $marginTop = ($labelHeight - $barcodeHeight) / 2;
-        
-            $printer->feed($marginTop); 
-            $printer->setJustification(Printer::JUSTIFY_CENTER);
-        
-            $printer->text($productName."\n");
-            $printer->setBarcodeHeight($barcodeHeight);
-            $printer->setBarcodeWidth($barcodeWidth);
-            $printer->barcode($barcodeData, Printer::BARCODE_CODE128);
-            $printer->text("\n".$barcodeData."\n");
-        
-            $printer->feed();
+            $printer->initialize();
+            $printer->setPrintWidth(384); 
+            $printer->setPrintHeight(300);
+
+            for ($i = 0; $i < $numCopies; $i++) {
+                $printer->text("Producto: $productName\n");
+                $printer->barcode($barcodeData, Printer::BARCODE_CODE39);
+                $printer->text("\n");
+                $printer->feed();
+            }
+
+            $printer->cut();
+            $printer->close();
+            return response()->json(['message' => 'Impresión exitosa']);
+        } catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 500);
         }
-        
-        $printer->cut();
-        $printer->close();
-
-        $response = [
-            'status' => 'error',
-            'message' => 'Se imprimió el código de barras correctamente'
-        ];
-
-        return $response;
     }
 }
