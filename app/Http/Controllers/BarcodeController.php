@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use DNS1D;
 use DB;
 
-use Mike42\Escpos\PrintConnectors\NetworkPrintConnector;
+use Mike42\Escpos\PrintConnectors\WindowsPrinterConnection;
 use Mike42\Escpos\Printer;
 
 class BarcodeController extends Controller
