@@ -139,6 +139,7 @@ class BarcodeController extends Controller
 
             for ($i = 0; $i < $numCopies; $i++) {
                 $printer->text("Producto: $productName\n");
+                $printer->setBarcodeHeight(80); 
                 $printer->barcode($barcodeData, Printer::BARCODE_CODE39);
                 $printer->text("\n");
                 $printer->feed();
