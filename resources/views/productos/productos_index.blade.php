@@ -209,7 +209,7 @@
                             <div class="form-group">
                                 <label style="font-size: 20px" for="">Porcentaje de ganancia</label>
                                 <input  oninput="calcularPrecioVenta()" required id="precio_venta_producto_p" name="precio_venta" style="font-size: 20px; width: 80%" class="form-control" type="hidden">
-                                <input oninput="calcularPrecioVenta()" required id="porcentaje_producto_p" name="porcentaje_ganancia" style="font-size: 20px" class="form-control" type="number">
+                                <input oninput="calcularPrecioVenta()" required id="porcentaje_producto_p" name="porcentaje_ganancia" style="font-size: 20px" class="form-control" type="text">
                             </div>
                         </div>
                         <input id="codigo_producto_p" name="codigo_producto" type="hidden">
