@@ -263,6 +263,8 @@
             var precioCompra =  document.getElementById("precio_compra_producto_p").value;
             var porcentajeGanancia = document.getElementById("porcentaje_producto_p").value;
             
+            porcentajeGanancia = porcentajeGanancia.replace(',', '.');
+            
             var precioVenta = precioCompra * (1 + (porcentajeGanancia / 100));
             precioVenta =  parseFloat(precioVenta.toFixed(2));
 
