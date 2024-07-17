@@ -198,7 +198,7 @@
                             </div>
                             <div class="form-group">
                                 <label style="font-size: 20px" for="">Precio Compra</label>
-                                <input required id="precio_compra_producto_p" name="precio_compra" style="font-size: 20px" class="form-control" type="text">
+                                <input  oninput="calcularPrecioVenta()" required id="precio_compra_producto_p" name="precio_compra" style="font-size: 20px" class="form-control" type="text">
                             </div>
                         </div>
                         <div class="col-lg-6">
@@ -208,7 +208,7 @@
                             </div>
                             <div class="form-group">
                                 <label style="font-size: 20px" for="">Porcentaje de ganancia</label>
-                                <input required id="precio_venta_producto_p" name="precio_venta" style="font-size: 20px; width: 80%" class="form-control" type="hidden">
+                                <input  oninput="calcularPrecioVenta()" required id="precio_venta_producto_p" name="precio_venta" style="font-size: 20px; width: 80%" class="form-control" type="hidden">
                                 <input oninput="calcularPrecioVenta()" required id="porcentaje_producto_p" name="porcentaje_ganancia" style="font-size: 20px" class="form-control" type="number">
                             </div>
                         </div>
@@ -264,7 +264,7 @@
             var porcentajeGanancia = document.getElementById("porcentaje_producto_p").value;
             
             porcentajeGanancia = porcentajeGanancia.replace(',', '.');
-            
+
             var precioVenta = precioCompra * (1 + (porcentajeGanancia / 100));
             precioVenta =  parseFloat(precioVenta.toFixed(2));
 
